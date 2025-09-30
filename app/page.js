@@ -287,9 +287,9 @@ export default function Home() {
                     <h2 className="text-lg font-semibold text-gray-900">
                       {story.title}
                     </h2>
-                    <h2 className="text-sm font-semibold text-gray-500">
+                    {/* <h2 className="text-sm font-semibold text-gray-500">
                       {story.subtitle}
-                    </h2>
+                    </h2> */}
                     <p className="text-xs text-gray-500">
                       Posted {new Date(story.createdAt).toLocaleDateString()}
                     </p>
