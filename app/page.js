@@ -172,9 +172,6 @@
 //   );
 // }
 
-
-
-
 // "use client";
 // import { useState, useEffect } from "react";
 
@@ -287,7 +284,7 @@
 //             const contentText = expanded
 //               ? story.content
 //               : story.content.slice(0, previewLimit);
-            
+
 //             const seeMoreLess = needsTruncation ? (
 //               <span className="text-gray-800 hover:underline text-sm ml-1">
 //                 {expanded ? "See less" : "See more"}
@@ -342,7 +339,7 @@
 //                   >
 //                     {expanded ? "See less" : "See more"}
 //                   </button>
-//                 )} 
+//                 )}
 //                 */}
 
 //                 {/* Actions */}
@@ -366,9 +363,6 @@
 //     </div>
 //   );
 // }
-
-
-
 
 "use client";
 import { useState, useEffect } from "react";
@@ -435,7 +429,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4">
+    <div className="min-h-screen bg-gray-100 py-10 px-0">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
           📖 Mini Stories App
@@ -470,7 +464,7 @@ export default function Home() {
         </div>
 
         {/* Stories List */}
-        <div className="space-y-6">
+        <div className="space-y-3">
           {stories.map((story) => {
             const hasLiked = likedStories.includes(story._id);
             const expanded = expandedStories[story._id] || false;
@@ -481,10 +475,7 @@ export default function Home() {
             const contentText = expanded
               ? story.content
               : story.content.slice(0, previewLimit);
-            
-            // **MODIFICATION HERE**
-            // The "See less" span is only generated if the content is expanded AND needs truncation.
-            // The "See more" span is only generated if the content is NOT expanded AND needs truncation.
+
             const seeMoreLess = needsTruncation ? (
               <span className="text-blue-600 hover:underline text-sm ml-1">
                 {expanded ? "See less" : "See more"}
@@ -497,85 +488,62 @@ export default function Home() {
                 {/* Only show ellipsis and "See more" if NOT expanded */}
                 {needsTruncation && !expanded && "..."}
                 {/* Only show "See more" if NOT expanded. If expanded, show "See less" at the end of content. */}
-                {needsTruncation && (
-                    expanded 
-                        ? ( // If expanded, display "See less" after content
-                            <>
-                                {" "} {/* Add a space before "See less" */}
-                                {seeMoreLess}
-                            </>
-                        )
-                        : ( // If truncated, display "See more" after ellipsis
-                            seeMoreLess
-                        )
+                {needsTruncation &&
+                  (expanded ? (
+                    // If expanded, display "See less" after content
+                    <>
+                      {" "}
+                      {/* Add a space before "See less" */}
+                      {seeMoreLess}
+                    </>
+                  ) : (
+                    // If truncated, display "See more" after ellipsis
+                    seeMoreLess
+                  ))}
+              </>
+            );
+
+            const finalDisplayContent = (
+              <>
+                {contentText}
+
+                {needsTruncation && !expanded && (
+                  <>
+                    {"..."}
+                    <span className="text-blue-600 hover:underline text-sm ml-1">
+                      {"See more"}
+                    </span>
+                  </>
                 )}
               </>
             );
 
-            // Re-evaluating the displayContent structure to ensure "See less" is NOT shown at the end of expanded content.
-            const finalDisplayContent = (
-                <>
-                    {/* 1. Show the content (truncated or full) */}
-                    {contentText}
-                    
-                    {/* 2. Show ellipsis and "See more" if content is truncated (i.e., NOT expanded) */}
-                    {needsTruncation && !expanded && (
-                        <>
-                            {"..."}
-                            <span className="text-blue-600 hover:underline text-sm ml-1">
-                                {"See more"}
-                            </span>
-                        </>
-                    )}
-
-                    {/* 3. Show "See less" ONLY IF expanded. 
-                         If the UI logic prevents showing "See less" at the *end* of the content
-                         but needs to preserve the logic of the original component (where the button appeared
-                         after the content), we must ensure it's not part of the content string.
-                         
-                         Since the requirement is to *not show See less at the end of the content* (implying 
-                         it shouldn't be rendered at all in the expanded state inside the <p> tag), 
-                         we will simply omit the expanded case from being part of the text.
-                         
-                         However, based on the prompt's example: "The lion kill and antelope and ... See more", 
-                         the previous implementation already did this. The new requirement *not* to show "See less"
-                         at the end means we must prevent the `seeMoreLess` from being rendered when `expanded` is true.
-                         
-                         Let's simplify to only show the interactive link when it is "See more".
-                    */}
-                </>
-            );
-
-
-            // Let's use a simpler structure that only adds "See more" for truncated content.
-            // The "See less" function is then ONLY tied to clicking the <p> itself, 
-            // as there is no separate "See less" button to click.
-            
             const contentOnly = expanded
-                ? story.content
-                : story.content.slice(0, previewLimit);
+              ? story.content
+              : story.content.slice(0, previewLimit);
 
-            const readMoreLink = needsTruncation && !expanded ? (
+            const readMoreLink =
+              needsTruncation && !expanded ? (
                 <>
-                    {"..."}
-                    <span className="text-blue-600 hover:underline text-sm ml-1">
-                        {"See more"}
-                    </span>
+                  {"..."}
+                  <span className="text-blue-600 hover:underline text-sm ml-1">
+                    {"See more"}
+                  </span>
                 </>
-            ) : null;
+              ) : null;
 
             // If expanded, the content is full, and we don't display a "See less" link at the end.
             const finalContent = (
-                <>
-                    {contentOnly}
-                    {readMoreLink}
-                </>
+              <>
+                {contentOnly}
+                {readMoreLink}
+              </>
             );
 
             return (
               <div
                 key={story._id}
-                className="bg-white rounded-xl shadow hover:shadow-md transition p-5"
+                className="bg-white rounded-xl shadow hover:shadow-md transition p-4"
               >
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-3">
@@ -583,7 +551,7 @@ export default function Home() {
                     {story.title?.charAt(0) || "S"}
                   </div>
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">
+                    <h2 className="text-md font-semibold text-gray-900">
                       {story.title}
                     </h2>
                     {/* <h2 className="text-sm font-semibold text-gray-500">
@@ -606,7 +574,7 @@ export default function Home() {
                 {/* The "See More Button" section is completely removed as per the original requested modification */}
 
                 {/* Actions */}
-                <div className="mt-4 flex items-center justify-between border-t pt-3">
+                <div className="mt-4 flex items-center justify-between border-t-1 border-gray-300 pt-2">
                   <button
                     onClick={() => toggleLike(story._id)}
                     className={`flex items-center gap-2 px-4 py-1.5 rounded-full font-medium transition ${
@@ -626,6 +594,3 @@ export default function Home() {
     </div>
   );
 }
-
-
-
